@@ -77,6 +77,14 @@ export const styles = StyleSheet.create({
   lineHeight: 23,
   color: "#FDFCFE",
   marginBottom: 16,
+ },
+ textTarefaNaoConcluida: {
+  fontFamily: "Roboto_300Light",
+  fontWeight: "700",
+  fontSize: 24,
+  lineHeight: 23,
+  color: "#FDFCFE",
+  marginBottom: 16,
  }
 
 });

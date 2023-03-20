@@ -1,35 +1,45 @@
-import { useState} from 'react'
-import { Switch, StyleSheet} from 'react-native';
-import { Text, TouchableOpacity, View } from "react-native";
-
+import { useState } from "react";
+import {Text, TouchableOpacity, View, Switch,  } from "react-native";
 import { styles } from "./style";
 
 interface Props {
   nome: string
+  concluida: boolean
   btnRemover: () => void
+  TarefaConcluida: () => void
+
 }
 
-export function Tarefa({ nome, btnRemover }: Props) {
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  return (
-    
+export function Tarefa({ nome, concluida, TarefaConcluida, btnRemover }: Props) {
+  function confirma() {
+    TarefaConcluida()
+  }
 
-    <View style={styles.container}>
-      <Switch
-        style={styles.toggle}
-        trackColor={{false: '#767577', true: '#31CF67'}}
-        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
-        value={isEnabled}
-      />
-   
+  function excluir() {
+    btnRemover()
+  }
     
-      <Text style={styles.textTarefas} > {nome} </Text>
-      <TouchableOpacity style={styles.botao} onPress={btnRemover}>
-        <Text style={styles.botaoTexto}>-</Text>
+  return (
+    <TouchableOpacity
+        style={styles.container}
+        onPress={confirma}>
+    <View style={styles.contador}>
+    <Text
+          style={[
+            styles.textTarefas,
+            { textDecorationLine: concluida ? "line-through" : "none" },
+          ]}
+        >
+          {nome}
+        </Text>
+        </View>
+        <TouchableOpacity style={styles.concluidaBotao} onPress={confirma}>
+        <Text style={styles.concluidaBotaoTexto}>V</Text>
       </TouchableOpacity>
-    </View>
+      <TouchableOpacity style={styles.botao} onPress={excluir}>
+        <Text style={styles.removerBotaoTexto}>-</Text>
+      </TouchableOpacity>
+   
+    </TouchableOpacity>
   )
 }

@@ -10,6 +10,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
+  contador: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   textTarefas: {
     marginLeft: 16,
     fontFamily: "Roboto_300Light",
@@ -18,22 +23,50 @@ export const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#FCFDFE",
   },
+  concluidaBotao: {
+    backgroundColor: "#31CF67",
+    width: 56,
+    height: 56,
+    borderRadius: 5,
+    padding: 5,
+    marginHorizontal:0,
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#fff",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center"
+
+  
+
+    
+  },
   botao: {
     width: 56,
     height: 60,
-    backgroundColor: "#E23C44",
+    backgroundColor: "#FF0000",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 4,
   },
-  botaoTexto: {
-    color: "#fff",
-    fontSize: 24,
+  concluidaBotaoTexto: {
+    borderRadius: 5,
+    padding: 5,
+    marginHorizontal: 5,
     fontWeight: "bold",
+    fontSize: 16,
+    color: "#fff",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center"
+    
   },
-  toggle: {
-    marginLeft: 12,
-  }
-
-
-});
+  removerBotaoTexto: {
+    borderRadius: 5,
+    padding: 5,
+    marginHorizontal: 5,
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#fff"
+},
+})

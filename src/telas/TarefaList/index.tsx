@@ -1,91 +1,117 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Image
+  Image,
+  FlatList
 } from "react-native";
-
-import { Tarefa } from "../../componente/Tarefa";
+import axios from 'axios'
 import { styles } from "./style";
 
-
+interface Tarefa {
+  id: number;
+  nome: string;
+  concluida: boolean;
+}
 export default function Principal() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [tarefa, setTarefa] = useState("");
+  
 
-  function addTarefa() {
-    if (tarefas.some((t) => t.name === tarefa.trim())) {
-      return console.log(tarefa, "- encontrado");
-    } else if (!tarefa.trim()) {
-      return console.log("encontrado vazio ou null");
-    } else {
-      setTarefas((prevState) => [
-        ...prevState,
-        { id: Date.now(), name: tarefa.trim(), completed: false },
-      ]);
+  useEffect(() => {
+    axios.get('http://192.168.0.109:3333/').then((response) => setTarefas(response.data));
+  }, []);
+
+  async function adicionarTarefa() {
+    
+      
+    console.log("Func Funcionando");
+
+    const response = await axios.post('http://192.168.0.109:3333/', { 
+  
+      nome: tarefa, });
+
+      console.log(response.data);
+   
+      setTarefas([...tarefas, response.data]);
       setTarefa("");
-    }
   }
 
-  function removerTarefa(id: number) {
-    setTarefas((prevState) => prevState.filter((tarefa) => tarefa.id !== id));
-  }
-
-  function selecionar(id: number) {
-    setTarefas((prevState) =>
-      prevState.map((tarefa) =>
-        tarefa.id === id ? { ...tarefa, completed: !tarefa.completed } : tarefa
-      )
+  async function concluirTarefa(id: number) {
+    const atualizarTarefa = tarefas.find((tarefa) => tarefa.id === id);
+    if (!atualizarTarefa) return;
+    const response = await axios.patch(`http://192.168.0.109:3333/${id}`, {
+      nome: atualizarTarefa.nome,
+      concluida: !atualizarTarefa.concluida,
+    });
+    const tarefaAtualizada = tarefas.map((tarefa) =>
+      tarefa.id === response.data.id ? response.data : tarefa
     );
+    setTarefas(tarefaAtualizada);
   }
-
-  const totalTarefas = tarefas.length;
-  const totalTarefasConcluidas = tarefas.filter((t) => t.completed).length;
-  const TarefasNaoConcluidas = totalTarefas - totalTarefasConcluidas;
-
+  async function deletarTarefa(id: number) {
+    await axios.delete(`http://192.168.0.109:3333/${id}`);
+    const tarefaAtualizadat = tarefas.filter((tarefa) => tarefa.id !== id);
+    setTarefas(tarefaAtualizadat);
+  }
+       
   return (
+
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.containerImage}>
-      <Image style={styles.Image} source={require('../../../assets/tarefasLista.png')} />
+        <Image style={styles.Image} source={require('../../../assets/tarefasLista.png')} />
       </View>
-      <Text style={styles.textListaTarefa}>Lista de Tarefas</Text>
+      <Text style={styles.textTarefaRealizar}>Lista de Tarefas</Text>
     
 
       <View style={styles.form}>
         <TextInput
+          id="nome"
           style={styles.textInputTarefa}
-          placeholder="Digite a nova tarefa"
+          placeholder="Adicione a tarefa"
           placeholderTextColor="#6b6b6b"
           onChangeText={setTarefa}
           value={tarefa}
         />
-        <TouchableOpacity style={styles.botao} onPress={addTarefa}>
+        <TouchableOpacity style={styles.botao} id="submit-button" onPress={adicionarTarefa}>
           <Text style={styles.botaoTexto}>+</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.textTarefaRealizar}>
-        Tarefas: {totalTarefas} </Text>
-        <Text style={styles.textConcluidas}>
-        Concluídas: {totalTarefasConcluidas}{" "} </Text>
-        <Text style={styles.textTarefaNaoConcluida}>
-        Não Concluídas: {TarefasNaoConcluidas} </Text>
-
+    
       <ScrollView showsVerticalScrollIndicator={true}>
-        {tarefas.map((tarefa) => (
-          <Tarefa
-            key={tarefa.id}
-            nome={tarefa.name}
-            concluida={tarefa.completed}
-            btnRemover={() => removerTarefa(tarefa.id)}
-            TarefaConcluida={() => selecionar(tarefa.id)}
-          />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={tarefas}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.containerTarefa}
+            onPress={() => concluirTarefa(item.id)}
+          >
+            <Text
+              style={[
+                styles.tituloTarefa,
+                item.concluida && styles.concluirTarefa,
+              ]}
+            >
+              {item.nome}
+            </Text>
+            { <Text style={styles.statusTarefa}>
+              {item.concluida ? "concluida" : "Não concluida"}
+            </Text> }
+            <TouchableOpacity onPress={() => deletarTarefa(item.id)}>
+              <Text style={styles.botaoDeletar}>X</Text>
+              </TouchableOpacity>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        />
+        </ScrollView>
+      
+      
     </View>
   );
 }

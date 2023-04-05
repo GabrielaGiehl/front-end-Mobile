@@ -85,6 +85,35 @@ export const styles = StyleSheet.create({
   lineHeight: 23,
   color: "#FDFCFE",
   marginBottom: 16,
- }
+ },
+ containerTarefa: {
+  flexDirection: "row",
+  alignItems: "center",
+  marginBottom: 16,
+},
+tituloTarefa: {
+  flex: 1,
+  fontSize: 22,
+  color: "#fff",
+  fontFamily: "bold",
+  backgroundColor: "#1F1E25"
 
+},
+statusTarefa: {
+  marginRight: 10,
+  color: "#fff",
+  fontSize: 18
+},
+concluirTarefa: {
+  color: "#00FF00",
+},
+botaoDeletar:{
+  backgroundColor: "#FF0000",
+  height: 20,
+  width: 20,
+  textAlign: "center",
+  color: "#fff"
+}
 });
+
+

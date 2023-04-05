@@ -1,45 +1,39 @@
-import { useState } from "react";
-import {Text, TouchableOpacity, View, Switch,  } from "react-native";
+import React, { useState } from "react";
+import {
+  
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { styles } from "./style";
+import axios from "axios";
 
 interface Props {
-  nome: string
-  concluida: boolean
-  btnRemover: () => void
-  TarefaConcluida: () => void
-
+  adicionarTarefa: (tarefa: string) => void;
 }
 
-export function Tarefa({ nome, concluida, TarefaConcluida, btnRemover }: Props) {
-  function confirma() {
-    TarefaConcluida()
-  }
+export function FormularioTarefa({ adicionarTarefa }: Props) {
+  const [tarefa, setTarefa] = useState("");
 
-  function excluir() {
-    btnRemover()
+  function adicionar() {
+    if (tarefa.trim() !== "") {
+      adicionarTarefa(tarefa.trim());
+      setTarefa("");
+    }
   }
-    
+  
   return (
-    <TouchableOpacity
-        style={styles.container}
-        onPress={confirma}>
-    <View style={styles.contador}>
-    <Text
-          style={[
-            styles.textTarefas,
-            { textDecorationLine: concluida ? "line-through" : "none" },
-          ]}
-        >
-          {nome}
-        </Text>
-        </View>
-        <TouchableOpacity style={styles.concluidaBotao} onPress={confirma}>
-        <Text style={styles.concluidaBotaoTexto}>V</Text>
+    <View style={styles.container}>
+      <TextInput
+
+        placeholder="Adicione a tarefa"
+        value={tarefa}
+        onChangeText={setTarefa}
+      />
+      <TouchableOpacity style={styles.botao} onPress={adicionar}>
+        <Text style={styles.botao}>Adicionar Tarefa</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.botao} onPress={excluir}>
-        <Text style={styles.removerBotaoTexto}>-</Text>
-      </TouchableOpacity>
-   
-    </TouchableOpacity>
-  )
+    </View>
+  );
 }
